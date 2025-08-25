@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Gráfico de Lucro e Perda</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .form-section {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+        
+        .data-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .generate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+        }
+        
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            min-height: 500px;
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 30px;
+        }
+        
+        .chart {
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            height: 100%;
+            padding: 20px 0;
+            border-bottom: 2px solid #374151;
+            position: relative;
+        }
+        
+        .chart-bar {
+            width: 60px;
+            background: linear-gradient(to top, #4facfe, #00f2fe);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.8s ease;
+            transform-origin: bottom;
+            animation: growUp 1s ease-out;
+        }
+        
+        .chart-bar.negative {
+            background: linear-gradient(to top, #ff6b6b, #ff8e8e);
+            transform-origin: top;
+        }
+        
+        .chart-bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+        
+        .chart-bar.negative .chart-bar-value {
+            bottom: -25px;
+            top: auto;
+        }
+        
+        .chart-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 500;
+            color: #6b7280;
+            font-size: 0.8rem;
+        }
+        
+        .y-axis {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: #374151;
+        }
+        
+        .y-axis-labels {
+            position: absolute;
+            left: -40px;
+            top: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .data-table {
+            background: #f8fafc;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .table-header {
+            background: #374151;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-row:nth-child(even) {
+            background: white;
+        }
+        
+        .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9ca3af;
+            text-align: center;
+        }
+        
+        .placeholder-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes growUp {
+            from {
+                transform: scaleY(0);
+            }
+            to {
+                transform: scaleY(1);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .data-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Gerador de Gráfico</h1>
+            <p>Crie gráficos de lucro e perda de forma simples e visual</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="chartTitle">Nome do Gráfico</label>
+                    <input type="text" id="chartTitle" placeholder="Ex: Vendas Trimestrais 2024">
+                </div>
+                
+                <div class="form-group">
+                    <label for="tableTitle">Nome da Tabela</label>
+                    <input type="text" id="tableTitle" placeholder="Ex: Resultados por Trimestre">
+                </div>
+                
+                <div class="form-group">
+                    <label>Dados do Gráfico (4 valores)</label>
+                    <div class="data-inputs">
+                        <input type="number" id="data1" placeholder="1º Trimestre">
+                        <input type="number" id="data2" placeholder="2º Trimestre">
+                        <input type="number" id="data3" placeholder="3º Trimestre">
+                        <input type="number" id="data4" placeholder="4º Trimestre">
+                    </div>
+                </div>
+                
+                <button class="generate-btn" onclick="generateChart()">
+                    🚀 Gerar Gráfico
+                </button>
+            </div>
+            
+            <div class="chart-section">
+                <div id="chartDisplay">
+                    <div class="placeholder">
+                        <div class="placeholder-icon">📈</div>
+                        <h3>Seu gráfico aparecerá aqui</h3>
+                        <p>Preencha os campos ao lado e clique em "Gerar Gráfico"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function generateChart() {
+            const chartTitle = document.getElementById('chartTitle').value || 'Gráfico de Lucro e Perda';
+            const tableTitle = document.getElementById('tableTitle').value || 'Dados do Gráfico';
+            
+            const data1 = parseFloat(document.getElementById('data1').value) || 0;
+            const data2 = parseFloat(document.getElementById('data2').value) || 0;
+            const data3 = parseFloat(document.getElementById('data3').value) || 0;
+            const data4 = parseFloat(document.getElementById('data4').value) || 0;
+            
+            const data = [data1, data2, data3, data4];
+            const labels = ['1º Período', '2º Período', '3º Período', '4º Período'];
+            
+            // Encontrar valores máximo e mínimo para escala
+            const maxValue = Math.max(...data, 0);
+            const minValue = Math.min(...data, 0);
+            const range = maxValue - minValue;
+            const scale = range > 0 ? 300 / range : 1;
+            
+            // Gerar HTML do gráfico
+            let chartHTML = `
+                <div class="chart-title">${chartTitle}</div>
+                <div class="chart-container">
+                    <div class="y-axis"></div>
+                    <div class="y-axis-labels">
+                        <span>${maxValue.toFixed(0)}</span>
+                        <span>0</span>
+                        <span>${minValue.toFixed(0)}</span>
+                    </div>
+                    <div class="chart">
+            `;
+            
+            data.forEach((value, index) => {
+                const height = Math.abs(value) * scale;
+                const isNegative = value < 0;
+                const barClass = isNegative ? 'chart-bar negative' : 'chart-bar';
+                
+                chartHTML += `
+                    <div class="${barClass}" style="height: ${height}px;">
+                        <div class="chart-bar-value">${value > 0 ? '+' : ''}${value.toLocaleString('pt-BR')}</div>
+                        <div class="chart-label">${labels[index]}</div>
+                    </div>
+                `;
+            });
+            
+            chartHTML += `
+                    </div>
+                </div>
+                <div class="data-table">
+                    <div class="table-header">${tableTitle}</div>
+            `;
+            
+            data.forEach((value, index) => {
+                const status = value >= 0 ? '📈 Lucro' : '📉 Perda';
+                chartHTML += `
+                    <div class="table-row">
+                        <span>${labels[index]}</span>
+                        <span style="color: ${value >= 0 ? '#10b981' : '#ef4444'}; font-weight: 600;">
+                            ${status}: ${value > 0 ? '+' : ''}${value.toLocaleString('pt-BR')}
+                        </span>
+                    </div>
+                `;
+            });
+            
+            chartHTML += '</div>';
+            
+            document.getElementById('chartDisplay').innerHTML = chartHTML;
+        }
+        
+        // Permitir gerar gráfico com Enter
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateChart();
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'973fe14445fa9ddf',t:'MTc1NjAwNzM2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
