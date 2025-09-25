@@ -1,36 +1,38 @@
-📊 Gerador de Gráfico de Lucro e Perda
+# 📊 Gerador de Gráfico de Lucro e Perda
 
 Crie gráficos visuais de lucros e perdas com facilidade! Este projeto em HTML, CSS e JavaScript permite que você insira até 4 valores (positivos ou negativos) e gere um gráfico de barras animado, além de uma tabela com os dados organizados.
 
-🖼️ Demonstração
+---
+## 🖼️ Demonstração
 
 Exemplo de gráfico gerado com dados personalizados.
 
-🚀 Funcionalidades
+---
+## 🚀 Funcionalidades
 
-Inserção de até 4 períodos com valores positivos (lucro) ou negativos (prejuízo).
+- Inserção de até 4 períodos com valores positivos (lucro) ou negativos (prejuízo).
 
-Geração dinâmica de gráfico de barras animado.
+- Geração dinâmica de gráfico de barras animado.
 
-Visualização responsiva em diferentes dispositivos.
+- Visualização responsiva em diferentes dispositivos.
 
-Tabela com resumo de lucros e perdas por período.
+- Tabela com resumo de lucros e perdas por período.
 
-Estilo moderno com gradientes e responsividade.
+- Estilo moderno com gradientes e responsividade.
+---
+## 💻 Tecnologias Utilizadas
 
-💻 Tecnologias Utilizadas
+- HTML5
 
-HTML5
+- CSS (com @import de fontes do Google Fonts)
 
-CSS3 (com @import de fontes do Google Fonts)
-
-JavaScript puro (sem bibliotecas externas)
-
-📂 Como Usar
+- JavaScript puro (sem bibliotecas externas)
+---
+## 📂 Como Usar
 
 Clone o repositório:
 
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
+git clone https://github.com/Henrique-XSuper/Gráfico.git
 
 
 Abra o arquivo index.html em qualquer navegador moderno.
@@ -55,7 +57,8 @@ Período	Valor	Resultado
 
 O layout adapta-se automaticamente para telas menores, como celulares e tablets.
 
-🛠️ Personalização
+---
+## 🛠️ Personalização
 
 Você pode facilmente alterar:
 
